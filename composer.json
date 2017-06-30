@@ -1,0 +1,14 @@
+{
+  "name": "drupal/flat_comments",
+  "type": "drupal-module",
+  "description": "Make all comments replies to the main post, regardless of the reply link used.",
+  "keywords": ["Drupal"],
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/flat_comments",
+  "minimum-stability": "dev",
+  "support": {
+    "issues": "https://www.drupal.org/project/issues/flat_comments",
+    "source": "http://cgit.drupalcode.org/flat_comments"
+  },
+  "require": { }
+}

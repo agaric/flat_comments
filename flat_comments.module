@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains flat_comments.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function flat_comments_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the flat_comments module.
+    case 'help.page.flat_comments':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Make all comments replies to the main post, regardless of the reply link used.') . '</p>';
+      return $output;
+
+    default:
+  }
+}

@@ -1,0 +1,7 @@
+name: Flat comments
+type: module
+description: Make all comments replies to the main post, regardless of the reply link used.
+core: 8.x
+package: Custom
+dependencies:
+  - comment
