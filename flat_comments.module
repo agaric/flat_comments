@@ -4,9 +4,9 @@
  * @file
  * Contains flat_comments.module.
  */
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\comment\CommentInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_help().
@@ -65,13 +65,20 @@ function flat_comments_save(array &$form, FormStateInterface $form_state) {
 /**
  * Implementation of hook_comment_presave().
  */
-function flat_comments_comment_presave($comment) {
+function flat_comments_comment_presave(CommentInterface $comment) {
+  $entity = \Drupal::entityManager()
+    ->getStorage($comment->getCommentedEntityTypeId())
+    ->load($comment->getCommentedEntityId());
+
+  $field_definition = \Drupal::entityManager()
+    ->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
+  $field_definition = $field_definition[$comment->getFieldName()];
+
   // Only affect new comments and comments set to be displayed flat.
-//  $display_mode = (int)variable_get('comment_default_mode_' . str_replace('comment_node_', '', $comment->node_type), 0);
-//  if (!$comment->cid && $display_mode === 0) {
-//    // Set parent id to NULL to prevent threads.
-//    $comment->pid = NULL;
-//  }
+  if (!$comment->id() && $field_definition->getSetting('default_mode') === 0) {
+    // Set parent id to NULL to prevent threads.
+    $comment->get('pid')->setValue(NULL);
+  }
 }
 
 /**
