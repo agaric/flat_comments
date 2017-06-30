@@ -6,6 +6,7 @@
  */
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\comment\CommentInterface;
 
 /**
  * Implements hook_help().
@@ -64,21 +65,38 @@ function flat_comments_save(array &$form, FormStateInterface $form_state) {
 /**
  * Implementation of hook_comment_presave().
  */
-//function flat_comments_comment_presave($comment) {
-//  // Only affect new comments and comments set to be displayed flat.
+function flat_comments_comment_presave($comment) {
+  // Only affect new comments and comments set to be displayed flat.
 //  $display_mode = (int)variable_get('comment_default_mode_' . str_replace('comment_node_', '', $comment->node_type), 0);
 //  if (!$comment->cid && $display_mode === 0) {
 //    // Set parent id to NULL to prevent threads.
 //    $comment->pid = NULL;
 //  }
-//}
+}
 
 /**
- * Implementation of hook_comment_view_alter().
+ * Implements hook_comments_links_alter().
  */
-//function flat_comments_comment_view_alter(&$build) {
-//  $show_reply_link = variable_get('flat_comments_remove_reply_link_' . $build['#node']->type, array());
-//  if (isset($build['links']['comment']['#links']['comment-reply']) && !empty($show_reply_link)) {
-//    unset($build['links']['comment']['#links']['comment-reply']);
-//  }
-//}
+function flat_comments_comment_links_alter(
+  array &$links,
+  CommentInterface $entity,
+  array &$context) {
+
+  // If there is not a "reply" link, no need to continue.
+  if (!isset($links['comment']['#links']['comment-reply'])) {
+    return;
+  }
+
+  $comment = $entity;
+  $entity = \Drupal::entityManager()
+    ->getStorage($comment->getCommentedEntityTypeId())
+    ->load($comment->getCommentedEntityId());
+
+  $field_definition = \Drupal::entityManager()
+    ->getFieldDefinitions($entity->getEntityTypeId(), $entity->bundle());
+  $field_definition = $field_definition[$comment->getFieldName()];
+
+  if($field_definition->getThirdPartySetting('flat_comments', 'remove_reply_link', FALSE)) {
+    unset($links['comment']['#links']['comment-reply']);
+  }
+}
