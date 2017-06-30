@@ -25,8 +25,9 @@ With flat_comments enabled and flat list display for the content type:
 
 1. Enable the module.
 2. Edit a content type.
-3. Under the "Comment settings" section uncheck "Threading" checkbox.
-4. (Optional) Hide reply links on comments by checking the
+3. Edit the "Comment" field.
+4. Uncheck the "Threading" checkbox.
+5. (Optional) Hide reply links on comments by checking the
     "Do not show reply link on comments" checkbox at the bottom of the
     "Comment settings" section.
 
