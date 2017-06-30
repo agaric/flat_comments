@@ -42,5 +42,5 @@ Alan Doucette (dragonwize)
 Original creator:
 Heine Deelstra (http://drupal.org/user/17943/contact)
 
-This project has been sponsored by:
-  * Agaric (http://agaric.com/)
+The port to Drupal 8 has been sponsored by:
+  * Agaric (http://agaric.com/) 
