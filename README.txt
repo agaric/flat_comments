@@ -32,8 +32,14 @@ With flat_comments enabled and flat list display for the content type:
 
 -- Developers
 
+Drupal 8 Port:
+David Valdez (https://www.drupal.org/u/gnuget)
+
 Current maintainer:
 Alan Doucette (dragonwize)
 
 Original creator:
 Heine Deelstra (http://drupal.org/user/17943/contact)
+
+This project has been sponsored by:
+  * Agaric (http://agaric.com/)
