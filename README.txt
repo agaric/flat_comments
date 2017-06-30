@@ -1,4 +1,4 @@
-Flatcomments is a small module that allows you to force comments to always be
+flat_comments is a small module that allows you to force comments to always be
 replies to the node, not other comments.
 
 -- Example
@@ -8,13 +8,13 @@ replies to the node, not other comments.
 
 Suppose user replies via the reply link on comment 1:
 
-Without flatcomments:
+Without flat_comments:
 
  \- comment 1
     \- comment 3
  \- comment 2
 
-With flatcomments enabled and flat list display for the content type:
+With flat_comments enabled and flat list display for the content type:
 
  \- comment 1
  \- comment 2

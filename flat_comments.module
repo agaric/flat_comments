@@ -4,21 +4,81 @@
  * @file
  * Contains flat_comments.module.
  */
-
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_help().
  */
 function flat_comments_help($route_name, RouteMatchInterface $route_match) {
+  $output = '';
   switch ($route_name) {
     // Main module help for the flat_comments module.
     case 'help.page.flat_comments':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Make all comments replies to the main post, regardless of the reply link used.') . '</p>';
-      return $output;
+      $output;
 
     default:
   }
+  return $output;
 }
+
+/**
+ * Implements hook_form_alter().
+ */
+function flat_comments_form_field_config_edit_form_alter(
+  &$form,
+  FormStateInterface $form_state,
+  $form_id) {
+  /** @var Drupal\field\Entity\FieldConfig $field */
+  $field = $form_state->getFormObject()->getEntity();
+
+  // This only applies for comment fields.
+  if ($field->getType() != 'comment') {
+    return;
+  }
+  $form['actions']['submit']['#submit'][] = 'flat_comments_save';
+
+  // Add note about flat_comments to comment display description.
+  $form['settings']['default_mode']['#description'] .= t(' <strong>flat_comments enabled:</strong> Leave this box unchecked to force replies to be to the main post instead of other comments.');
+
+  // Add option to remove reply link from comments.
+  $form['settings']['remove_reply_link'] = [
+    '#type' => 'checkbox',
+    '#title' => t('Do not show a reply link on comments'),
+    '#default_value' => $field->getThirdPartySetting('flat_comments', 'remove_reply_link', FALSE),
+  ];
+}
+
+function flat_comments_save(array &$form, FormStateInterface $form_state) {
+  /** @var Drupal\field\Entity\FieldConfig $field */
+  $field = $form_state->getFormObject()->getEntity();
+  $values = $form_state->getValues();
+
+  $field->setThirdPartySetting('flat_comments', 'remove_reply_link', $values['settings']['remove_reply_link']);
+  $field->save();
+}
+
+/**
+ * Implementation of hook_comment_presave().
+ */
+//function flat_comments_comment_presave($comment) {
+//  // Only affect new comments and comments set to be displayed flat.
+//  $display_mode = (int)variable_get('comment_default_mode_' . str_replace('comment_node_', '', $comment->node_type), 0);
+//  if (!$comment->cid && $display_mode === 0) {
+//    // Set parent id to NULL to prevent threads.
+//    $comment->pid = NULL;
+//  }
+//}
+
+/**
+ * Implementation of hook_comment_view_alter().
+ */
+//function flat_comments_comment_view_alter(&$build) {
+//  $show_reply_link = variable_get('flat_comments_remove_reply_link_' . $build['#node']->type, array());
+//  if (isset($build['links']['comment']['#links']['comment-reply']) && !empty($show_reply_link)) {
+//    unset($build['links']['comment']['#links']['comment-reply']);
+//  }
+//}
